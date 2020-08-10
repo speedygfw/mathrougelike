@@ -9,6 +9,7 @@ let options = {
 window.onload = () => {
   //initialize a gamescreen and append it to the DOM.
   let game = new GameScreen(options);
-  document.body.appendChild(game.getDisplay().getContainer());
-  game.switchScreen(game.startScreen);
+  let el = document.getElementById("game");
+  el.appendChild(game.getDisplay().getContainer());
+  game.switchScreen(game.playScreen);
 };

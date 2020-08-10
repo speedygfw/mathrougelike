@@ -1,18 +1,24 @@
-import { Color, KEYS, Map } from "../lib/index.js";
+import { Color, KEYS, Map, FOV } from "../lib/index.js";
 import Game from "./Game.js";
+import Player from "./Player.js";
+
 import {
   KEYDOWN,
   HEIGHT,
   WIDTH,
   NULL_TILE,
   FLOOR_TILE,
-  WALL_TILE
+  WALL_TILE,
+  PLAYER_TILE,
+  OUT_TILE,
+  IN_TILE
 } from "../assets/types.js";
 // import Tile from "./Tile.js";
 // import Glyph from "./Glyph.js";
 import GameMap from "./GameMap.js";
 import Tile from "./Tile.js";
 import Glyph from "./Glyph.js";
+import Creature from "./Creature.js";
 
 /* GameScreen handles all Screen management for the Game object */
 class GameScreen extends Game {
@@ -40,7 +46,61 @@ class GameScreen extends Game {
       this._currentScreen.render(this._display);
     }
   };
+  
+  generateRandomMap()
+  {
+    let map = [];
+      
 
+      for (let x = 0; x < WIDTH; x++) {
+        map.push([]);
+        for (let y = 0; y < HEIGHT; y++) {
+          map[x].push(NULL_TILE);
+        }
+      }
+
+      let generator = new Map.Cellular(WIDTH, HEIGHT);
+    generator.randomize(0.5);
+
+      let totalIterations = 30;
+      for (let i = 0; i < totalIterations - 1; i++) {
+        generator.create();
+      }
+
+      generator.create((x, y, v) => {
+      
+        // generate floor title
+        if (v === 1) {
+          map[x][y] = FLOOR_TILE;
+        } else {
+          map[x][y] = WALL_TILE;
+        }
+      });
+      
+      let coords = this.getRandomPlace(map);
+      map[coords[0]][coords[1]] = IN_TILE;
+      this._player = new Player(PLAYER_TILE, coords[0], coords[1]);
+      let outCoords = this.getRandomPlace(map);
+      map[outCoords[0]][outCoords[1]] = OUT_TILE;
+        
+     
+      return map;
+  }
+  getRandomPlace(map)
+  {
+    let ready = false;
+    while(ready == false)
+    {
+      let rndX = Math.floor(Math.random() * WIDTH) +1;
+      let rndY = Math.floor(Math.random() * HEIGHT) +1;
+      let coord = [];
+      if (map[rndX][rndY] == FLOOR_TILE)
+      {
+        return[rndX, rndY];
+        xxx = true;
+      }
+    }
+  }
   /*
    * Start Screen will be a placeholder for our game's main menu.
    */
@@ -52,66 +112,50 @@ class GameScreen extends Game {
       console.log("Exited start screen");
     },
     render: display => {
-      display.drawText(1, 1, "%c{yellow}JSRogue2!");
+      display.drawText(1, 1, "%c{yellow}Mathrougelike!");
       display.drawText(1, 2, "Press [Enter] to start!");
     },
     handleInput: (inputType, inputData) => {
       if (inputType === KEYDOWN) {
         if (inputData.keyCode === KEYS.VK_RETURN) {
           this.switchScreen(this.playScreen);
-        }
+        } 
       }
     }
   };
+  
   /*
   * Play screen currently takes either Enter or Escape keyboard inputs,
   and switches screen accordingly. 
   */
   playScreen = {
+    
     enter: () => {
       console.log("Entered play screen");
+      let creatures = [];
+      let map = this.generateRandomMap();
+      
 
-      let map = [];
-      for (let x = 0; x < WIDTH; x++) {
-        map.push([]);
-        for (let y = 0; y < HEIGHT; y++) {
-          map[x].push(NULL_TILE);
-        }
+      for(let n=0; n < 10; n++)
+      {
+        let x = Math.floor(Math.random() * WIDTH);
+        let y = Math.floor(Math.random() * HEIGHT);
+        let c = new Creature(new Tile(new Glyph("P"),true), x, y, map);
+        creatures.push(c);
       }
+      this._map = new GameMap(map, creatures, this._player);
+      //this._map.setFOV(new FOV.PreciseShadowcasting(this.lightPasses));
 
-      let generator = new Map.Cellular(WIDTH, HEIGHT);
-      generator.randomize(0.5);
-
-      let totalIterations = 3;
-      for (let i = 0; i < totalIterations - 1; i++) {
-        generator.create();
-      }
-      generator.create((x, y, v) => {
-        // generate floor title
-        if (v === 1) {
-          map[x][y] = FLOOR_TILE;
-        } else {
-          map[x][y] = WALL_TILE;
-        }
-      });
-      this._map = new GameMap(map);
     },
     exit: () => {
       console.log("Exited play screen");
     },
     render: display => {
-      for (let x = 0; x < this._map.getWidth(); x++) {
-        for (let y = 0; y < this._map.getHeight(); y++) {
-          let glyph = this._map.getTile(x, y).getGlyph();
-          display.draw(
-            x,
-            y,
-            glyph.getChar(),
-            glyph.getForeground(),
-            glyph.getBackground()
-          );
-        }
-      }
+
+      this._map.renderMap(display);
+      //this._map.renderCreatures(display);
+      this._player.render(display);
+      
     },
     handleInput: (inputType, inputData) => {
       if (inputType === KEYDOWN) {
@@ -119,11 +163,24 @@ class GameScreen extends Game {
           this.switchScreen(this.winScreen);
         } else if (inputData.keyCode === KEYS.VK_ESCAPE) {
           this.switchScreen(this.loseScreen);
-        }
+        } else if (inputData.keyCode == KEYS.VK_UP){
+          this._player.move(this._player.getX(), this._player.getY()-1, this._map)
+          this._currentScreen.render(this._display);
+        } else if (inputData.keyCode == KEYS.VK_DOWN){
+          this._player.move(this._player.getX(), this._player.getY()+1, this._map)
+          this._currentScreen.render(this._display);
+        } else if (inputData.keyCode == KEYS.VK_LEFT){
+          this._player.move(this._player.getX()-1, this._player.getY(), this._map)
+          this._currentScreen.render(this._display);
+        } else if (inputData.keyCode == KEYS.VK_RIGHT){
+          this._player.move(this._player.getX()+1, this._player.getY(), this._map)
+          this._currentScreen.render(this._display);
+      }
       }
     },
     map: null
   };
+  
   /*
    * Win screen is our win condition screen, later we can implement highscore values.
    */

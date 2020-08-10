@@ -30,6 +30,7 @@ class Game {
    * Helper function that simply returns the current display.
    */
   getDisplay = () => this._display;
+  
 }
 
 // We need to export the Game class in order to extend it from GameScreen
