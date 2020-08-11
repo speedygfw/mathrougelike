@@ -86,6 +86,37 @@ class GameScreen extends Game {
      
       return map;
   }
+  generateRandomDungeon()
+  {
+    let map = [];
+    for (let x = 0; x < WIDTH; x++) {
+      map.push([]);
+      for (let y = 0; y < HEIGHT; y++) {
+        map[x].push(NULL_TILE);
+      }
+    }
+
+    new Map.Uniform(WIDTH, HEIGHT).create(function(x, y, type) {
+      
+      let tile = "";
+      
+      if (type == 1)
+        tile = WALL_TILE;
+      else
+        tile = FLOOR_TILE;
+      map[x][y] = tile;
+      //display.draw(x, y, char);
+    });
+
+    let coords = this.getRandomPlace(map);
+    map[coords[0]][coords[1]] = IN_TILE;
+    this._player = new Player(PLAYER_TILE, coords[0], coords[1]);
+    let outCoords = this.getRandomPlace(map);
+    map[outCoords[0]][outCoords[1]] = OUT_TILE;
+
+    return map;
+    
+  }
   getRandomPlace(map)
   {
     let ready = false;
@@ -133,7 +164,7 @@ class GameScreen extends Game {
     enter: () => {
       console.log("Entered play screen");
       let creatures = [];
-      let map = this.generateRandomMap();
+      let map = this.generateRandomDungeon();
       
 
       for(let n=0; n < 10; n++)

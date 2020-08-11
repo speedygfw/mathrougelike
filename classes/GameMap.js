@@ -1,8 +1,9 @@
 import Tile from "./Tile.js";
 import Glyph from "./Glyph.js";
-import { NULL_TILE, WIDTH, HEIGHT } from "../assets/types.js";
+import { NULL_TILE, WIDTH, HEIGHT, WALL_TILE } from "../assets/types.js";
 import { Color, KEYS, Map, FOV } from "../lib/index.js";
 
+var instance = null;
 class GameMap {
   _tiles = null;
   constructor(tiles, creatures, player) {
@@ -12,8 +13,10 @@ class GameMap {
     this._height = tiles[0].length;
     this._player = player;
     this._useFOV = true;
+    this.level = 1;
     //this.lightPasses.bind({tiles: this._tiles})
     this._fov = new FOV.PreciseShadowcasting(this.lightPasses);
+    instance = this;
   }
 
   getWidth = () => this._width;
@@ -56,7 +59,12 @@ class GameMap {
   
   /* input callback */
   lightPasses(x, y) {
-    if (x < 0 || x >= this._width || y < 0 || y >= this._height) {
+    
+    if (x < 0 || x >= instance._width || y < 0 || y >= instance._height) {
+      return false;
+    }
+    if (instance.getTile(x,y) == WALL_TILE)
+    {
       return false;
     }
     //console.log(x, y);
@@ -96,16 +104,23 @@ class GameMap {
       
       }
       this.renderCreatures(display);
-  }
-/*   var data = {};
-new Map.Uniform(WIDTH, HEIGHT).create(function(x, y, type) {
+  } 
+ // var data = {};
+  //var display = display;
+/* new Map.Uniform(WIDTH, HEIGHT).create(function(x, y, type) {
     data[x+","+y] = type;
-    display.DEBUG(x, y, type);
+    let char = "";
+    console.log(type)
+    if (type == 1)
+      char = '#';
+    else
+      char = '.';
+    display.draw(x, y, char);
 }); */
 
   }
   renderCreatures = (display) => {
-    console.log("creatures to render:" + this._creatures.length)
+    //console.log("creatures to render:" + this._creatures.length)
     for (let n=0; n < this._creatures.length; n++)
     {
       let c = this._creatures[n];
@@ -114,6 +129,8 @@ new Map.Uniform(WIDTH, HEIGHT).create(function(x, y, type) {
   }
   setFOV(fov) {this._fov = fov;}
   getFOV = () => this._fov;
+  setLevel(level) {this._level = level;}
+  getLevel = () => this._level;
 }
 
 export default GameMap;
