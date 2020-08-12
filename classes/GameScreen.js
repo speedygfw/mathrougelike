@@ -49,15 +49,7 @@ class GameScreen extends Game {
   
   generateRandomMap()
   {
-    let map = [];
-      
-
-      for (let x = 0; x < WIDTH; x++) {
-        map.push([]);
-        for (let y = 0; y < HEIGHT; y++) {
-          map[x].push(NULL_TILE);
-        }
-      }
+    let map = this.initMap();
 
       let generator = new Map.Cellular(WIDTH, HEIGHT);
     generator.randomize(0.5);
@@ -77,24 +69,16 @@ class GameScreen extends Game {
         }
       });
       
-      let coords = this.getRandomPlace(map);
-      map[coords[0]][coords[1]] = IN_TILE;
-      this._player = new Player(PLAYER_TILE, coords[0], coords[1]);
-      let outCoords = this.getRandomPlace(map);
-      map[outCoords[0]][outCoords[1]] = OUT_TILE;
+      this.placePlayerOnMap(map);
+      this.placeExitOnMap(map);
         
      
       return map;
-  }
+  };
+
   generateRandomDungeon()
   {
-    let map = [];
-    for (let x = 0; x < WIDTH; x++) {
-      map.push([]);
-      for (let y = 0; y < HEIGHT; y++) {
-        map[x].push(NULL_TILE);
-      }
-    }
+    let map = this.initMap();
 
     new Map.Uniform(WIDTH, HEIGHT).create(function(x, y, type) {
       
@@ -108,22 +92,45 @@ class GameScreen extends Game {
       //display.draw(x, y, char);
     });
 
-    let coords = this.getRandomPlace(map);
-    map[coords[0]][coords[1]] = IN_TILE;
-    this._player = new Player(PLAYER_TILE, coords[0], coords[1]);
-    let outCoords = this.getRandomPlace(map);
-    map[outCoords[0]][outCoords[1]] = OUT_TILE;
+    this.placePlayerOnMap(map);
+    this.placeExitOnMap(map);
 
     return map;
     
-  }
+  };
+
+  placeExitOnMap(map){
+    let outCoords = this.getRandomPlace(map);
+    map[outCoords[0]][outCoords[1]] = OUT_TILE;
+  };
+
+  placePlayerOnMap(map)
+  {
+    let coords = this.getRandomPlace(map);
+    map[coords[0]][coords[1]] = IN_TILE;
+    this._player = new Player(PLAYER_TILE, coords[0], coords[1]);
+
+  };
+
+  initMap()
+  {
+    let map = [];
+    for (let x = 0; x < WIDTH; x++) {
+      map.push([]);
+      for (let y = 0; y < HEIGHT; y++) {
+        map[x].push(NULL_TILE);
+      }
+    }
+    return map;
+  };
+
   getRandomPlace(map)
   {
     let ready = false;
     while(ready == false)
     {
-      let rndX = Math.floor(Math.random() * WIDTH) +1;
-      let rndY = Math.floor(Math.random() * HEIGHT) +1;
+      let rndX = Math.floor(Math.random() * WIDTH);
+      let rndY = Math.floor(Math.random() * HEIGHT);
       let coord = [];
       if (map[rndX][rndY] == FLOOR_TILE)
       {
@@ -154,7 +161,22 @@ class GameScreen extends Game {
       }
     }
   };
-  
+  initLevel(){
+      let creatures = [];
+      let map = this.generateRandomDungeon();
+      
+
+      for(let n=0; n < 10; n++)
+      {
+        let coords = this.getRandomPlace(map);
+        let chars = ["p", "m", "M"];
+        let rnd_chars = Math.floor(Math.random() * chars.length);
+        let g = new Tile(new Glyph(chars[rnd_chars]),true);
+        let c = new Creature("Mathmonster", 1, g, coords[0], coords[1], map);
+        creatures.push(c);
+      }
+      this._map = new GameMap(map, creatures, this._player);
+  }
   /*
   * Play screen currently takes either Enter or Escape keyboard inputs,
   and switches screen accordingly. 
@@ -163,18 +185,7 @@ class GameScreen extends Game {
     
     enter: () => {
       console.log("Entered play screen");
-      let creatures = [];
-      let map = this.generateRandomDungeon();
-      
-
-      for(let n=0; n < 10; n++)
-      {
-        let x = Math.floor(Math.random() * WIDTH);
-        let y = Math.floor(Math.random() * HEIGHT);
-        let c = new Creature(new Tile(new Glyph("P"),true), x, y, map);
-        creatures.push(c);
-      }
-      this._map = new GameMap(map, creatures, this._player);
+      this.initLevel();
       //this._map.setFOV(new FOV.PreciseShadowcasting(this.lightPasses));
 
     },
@@ -186,6 +197,10 @@ class GameScreen extends Game {
       this._map.renderMap(display);
       //this._map.renderCreatures(display);
       this._player.render(display);
+      let el = "<b>Name:" + this._player.getName() 
+      + "<br>Level:" + this._player.getLevel() + "</b>"
+      + "<br>HP:" + this._player.getHP() + "</b>"
+          document.getElementById('hp').innerHTML= el;
       
     },
     handleInput: (inputType, inputData) => {
@@ -206,7 +221,9 @@ class GameScreen extends Game {
         } else if (inputData.keyCode == KEYS.VK_RIGHT){
           this._player.move(this._player.getX()+1, this._player.getY(), this._map)
           this._currentScreen.render(this._display);
-      }
+        } else if (inputData.keyCode == KEYS.VK_SHIFT){
+          
+        }
       }
     },
     map: null

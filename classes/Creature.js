@@ -1,10 +1,17 @@
 class Creature
 {
-    constructor(tile, x, y, map) {
+
+    constructor(name, level, tile, x, y, map) {
         this._tile = tile;
         this._x = x;
         this._y = y;
         this._map = map;
+        this._level = 1;
+        this._hp = 20 * this._level;
+        this._ap = 20 * this._level;
+        this._rip = false;
+        this._name = name;
+        this._level = level;
 
     }
 
@@ -35,9 +42,40 @@ class Creature
           );
     }
 
+    hit = (enemy) => {
+        
+        this._hp -= enemy.getAP();
+
+        if (this._hp <= 0)
+        {
+            this._rip = true;
+        }
+        console.log("player hits enemy: " + enemy.getAP() + " is death: " + this._rip);
+    }
+
     getX = () => this._x;
     getY = () => this._y;
     getGlyph = () => {return this._tile.getGlyph();}
+    getName = () => this._name;
+    getHP = () => this._hp;
+    getAP = () => this._ap;
+    isDeath = () => this._rip;
+    getLevel = () => this._level;
+    getArithmeticSymbol = () => {
+        let char = this._tile.getGlyph().getChar();
+        switch(char)
+        {
+            case "p":
+                return "+";
+                break;
+            case "m":
+                return "-";
+                break;
+            case "M":
+                return "*";
+                break;
+        }
+    }
 }
 
 export default Creature;

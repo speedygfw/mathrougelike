@@ -13,7 +13,7 @@ class GameMap {
     this._height = tiles[0].length;
     this._player = player;
     this._useFOV = true;
-    this.level = 1;
+    this._level = 5;
     //this.lightPasses.bind({tiles: this._tiles})
     this._fov = new FOV.PreciseShadowcasting(this.lightPasses);
     instance = this;
@@ -24,10 +24,10 @@ class GameMap {
 
 
   enemyHit = (x, y) => {
-    console.log("enemy hit called. creatures to check: " + this._creatures.length);
+    //console.log("enemy hit called. creatures to check: " + this._creatures.length);
     for(let n=0; n < this._creatures.length; n++)
     {
-      console.log("creature x: " + this._creatures[n].getX() + " y: " + this._creatures[n].getY());
+      //console.log("creature x: " + this._creatures[n].getX() + " y: " + this._creatures[n].getY());
       if (this._creatures[n].getX() == x && this._creatures[n].getY() == y){
         return this._creatures[n];
       }
@@ -55,6 +55,17 @@ class GameMap {
     }
     return null;
   };
+
+  deleteCreature(c){
+    for (let n=0; n<this._creatures.length; n++)
+    {
+      if (this._creatures[n] == c)
+      {
+        this._creatures.splice(n, 1);
+        return;
+      }
+    }
+  }
   
   
   /* input callback */
@@ -84,7 +95,7 @@ class GameMap {
       //var color = (data[x+","+y] ? "#aa0": "#660");
       display.draw(x, y, map_glyph.getChar(), map_glyph.getForeground(), map_glyph.getBackground());
       if (c_tile) {
-        console.log(c_tile);
+        //console.log(c_tile);
         let c_glyph = c_tile.getGlyph();
         display.draw(x, y, c_glyph.getChar(), c_glyph.getForeground(), c_glyph.getBackground());
       }
@@ -120,12 +131,21 @@ class GameMap {
 
   }
   renderCreatures = (display) => {
-    //console.log("creatures to render:" + this._creatures.length)
+    console.log("creatures to render:" + this._creatures.length)
+    let deaths = [];
     for (let n=0; n < this._creatures.length; n++)
     {
       let c = this._creatures[n];
+      console.log('is death: ' + c.isDeath());
+      if (c.isDeath())
+      {
+        console.log("is death = true. delete creature...");
+        delete this._creatures[n];
+      }
+      
       c.render(display);
     }
+    
   }
   setFOV(fov) {this._fov = fov;}
   getFOV = () => this._fov;
