@@ -197,10 +197,13 @@ class GameScreen extends Game {
       this._map.renderMap(display);
       //this._map.renderCreatures(display);
       this._player.render(display);
-      let el = "<b>Name:" + this._player.getName() 
-      + "<br>Level:" + this._player.getLevel() + "</b>"
-      + "<br>HP:" + this._player.getHP() + "</b>"
-          document.getElementById('hp').innerHTML= el;
+      let el = "Name:" + this._player.getName() + " "
+      + "Level:" + this._player.getLevel()+ " "
+      + "HP:" + this._player.getHP()+ " "
+      document.getElementById('hp').innerHTML= el;
+      let messages ="Welcome to Math Rougelike.";
+      document.getElementById('messages').innerHTML = messages;
+
       
     },
     handleInput: (inputType, inputData) => {

@@ -13,7 +13,7 @@ class GameMap {
     this._height = tiles[0].length;
     this._player = player;
     this._useFOV = true;
-    this._level = 5;
+    this._level = 1;
     //this.lightPasses.bind({tiles: this._tiles})
     this._fov = new FOV.PreciseShadowcasting(this.lightPasses);
     instance = this;
