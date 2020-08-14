@@ -2,45 +2,59 @@
 <html>
     <title>Mathroaaugelike - 2020</title>
     <head>
-        
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+       <style>
+         .textarea {
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px solid gray;
+    font: medium -moz-fixed;
+    font: -webkit-small-control;
+    height: 280px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 400px;
+}
+       </style>
+      
        
     </head>
     <body>
-        <main role="main" class="container-fluid">
+        <main role="main" class="container">
         <h1 class="text-center">Math Rougelike</h1>
+        
         <div class="row">
             <div class="col-lg-12" id="hp"></div>
             <div class="col-lg-9" id="game"></div>
             <div class="col-lg-3" id="desc">
-                <h4>Messages</h4>
-                Those who are any good at mental arithmetic <br>
-                will be the heroes of our time.
-                <div id="messages"></div>
-            </div>
+              
+                <h3>Messages</h3>
+                
+                
+                <div class="textarea" id="messages"></div>
+                </div>
+           
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <b>Controls</b><br>
-                <kbd>Arrow left</kbd> = Left <kbd>Arrow right</kbd> = right<br>
-                <kbd>Arrow down</kbd> = down <kbd>Arrow up</kbd> = up<br>
+                <kbd>a</kbd> = Left <kbd>d</kbd> = right<br>
+                <kbd>s</kbd> = down <kbd>w</kbd> = up<br>
                 <kbd>Return</kbd> = go up/down<br>
                 
                 
             </div>
            
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 
                 <b>Monsters</b><br>
                 p = plus<br>
                 m = minus<br>
                 M = multiple<br>
             </div>
-            <div class="col-lg-4">
+            <!-- <div class="col-lg-4">
                 <b>Highscore</b><br>
                 <table class="table table-bordered">
                     <thead>
@@ -74,12 +88,15 @@
                   </table>
 
                 
-            </div>
+            </div> -->
         </div>
         </main>
         <script type="module" src="assets/main.js"></script>
        
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     </body>
     
 </html>

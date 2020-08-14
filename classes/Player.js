@@ -1,3 +1,5 @@
+import Helpers from "./Helpers.js";
+
 class Player {
     constructor(tile, x, y) {
         this._tile = tile;
@@ -14,22 +16,27 @@ class Player {
         let one = Math.floor(Math.random() * (parseInt(map.getLevel()) * 10)) +1;
         let two = Math.floor(Math.random() * (parseInt(map.getLevel()) * 10)) +1;
         let answer = prompt("What is "+ one + enemy.getArithmeticSymbol() + two + "?");
-        let answer_right = false;
+        let answer_right;
+        let is_right = false;
         let arithmeticS = enemy.getArithmeticSymbol();
         switch(arithmeticS)
         {
             case "+":
-                answer_right = answer == (one + two);
+                answer_right = (one + two)
+                is_right = answer == answer_right;
                 break;
             case "-":
-                answer_right = answer == (one - two);
+                answer_right = (one - two);
+                is_right = answer == answer_right;
                 break;
             case "*":
-                answer_right = answer == (one * two);
+                answer_right = (one*two);
+                is_right = answer == answer_right;
+                break;
         }
         
-            if (answer_right){
-                console.log("right answer in");
+            if (is_right){
+                Helpers.message("right answer: " + one + enemy.getArithmeticSymbol() + two +"=" + answer);
                 enemy.hit(this);
                 if (enemy.isDeath()){
                     map.deleteCreature(enemy);
@@ -37,7 +44,8 @@ class Player {
 
                 return true;
             } else {
-                console.log("wrong answer.");
+                Helpers.message("wrong answer: " + one + enemy.getArithmeticSymbol() + two +"=" + answer);
+                Helpers.message("right answer is: " + answer_right)
                 this.hit(enemy);
                 if (this.isDeath()){
 
@@ -90,7 +98,7 @@ class Player {
         {
             this._rip = true;
         }
-        console.log("enemy hits player: " + player.getAP() + " is death: " + this._rip);
+        Helpers.message("enemy hits player: " + player.getAP() + " is death: " + this._rip);
     }
 
     getX = () => this._x;

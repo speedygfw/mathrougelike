@@ -1,6 +1,7 @@
 import { Color, KEYS, Map, FOV } from "../lib/index.js";
 import Game from "./Game.js";
 import Player from "./Player.js";
+import Helpers from "./Helpers.js";
 
 import {
   KEYDOWN,
@@ -165,14 +166,30 @@ class GameScreen extends Game {
       let creatures = [];
       let map = this.generateRandomDungeon();
       
-
+      let level = 1;
       for(let n=0; n < 10; n++)
       {
         let coords = this.getRandomPlace(map);
         let chars = ["p", "m", "M"];
         let rnd_chars = Math.floor(Math.random() * chars.length);
         let g = new Tile(new Glyph(chars[rnd_chars]),true);
-        let c = new Creature("Mathmonster", 1, g, coords[0], coords[1], map);
+        let mname = "";
+        
+        switch (chars[rnd_chars])
+        {
+          case "p":
+            mname = "plus";
+            break;
+          case "m":
+            mname = "minus";
+            break;
+          case "M":
+            mname = "multiple";
+            break;
+        }
+        mname += " " + level;
+
+        let c = new Creature(mname, level, g, coords[0], coords[1], map);
         creatures.push(c);
       }
       this._map = new GameMap(map, creatures, this._player);
@@ -186,6 +203,9 @@ class GameScreen extends Game {
     enter: () => {
       console.log("Entered play screen");
       this.initLevel();
+      Helpers.message("Welcome to Math Rougelike.");
+      Helpers.message("Those who are any good at mental arithmetic");
+      Helpers.message("will be the heroes of our time.");
       //this._map.setFOV(new FOV.PreciseShadowcasting(this.lightPasses));
 
     },
@@ -201,8 +221,7 @@ class GameScreen extends Game {
       + "Level:" + this._player.getLevel()+ " "
       + "HP:" + this._player.getHP()+ " "
       document.getElementById('hp').innerHTML= el;
-      let messages ="Welcome to Math Rougelike.";
-      document.getElementById('messages').innerHTML = messages;
+      Helpers.drawMessages();
 
       
     },
@@ -212,16 +231,16 @@ class GameScreen extends Game {
           this.switchScreen(this.winScreen);
         } else if (inputData.keyCode === KEYS.VK_ESCAPE) {
           this.switchScreen(this.loseScreen);
-        } else if (inputData.keyCode == KEYS.VK_UP){
+        } else if (inputData.keyCode == KEYS.VK_W){
           this._player.move(this._player.getX(), this._player.getY()-1, this._map)
           this._currentScreen.render(this._display);
-        } else if (inputData.keyCode == KEYS.VK_DOWN){
+        } else if (inputData.keyCode == KEYS.VK_S){
           this._player.move(this._player.getX(), this._player.getY()+1, this._map)
           this._currentScreen.render(this._display);
-        } else if (inputData.keyCode == KEYS.VK_LEFT){
+        } else if (inputData.keyCode == KEYS.VK_A){
           this._player.move(this._player.getX()-1, this._player.getY(), this._map)
           this._currentScreen.render(this._display);
-        } else if (inputData.keyCode == KEYS.VK_RIGHT){
+        } else if (inputData.keyCode == KEYS.VK_D){
           this._player.move(this._player.getX()+1, this._player.getY(), this._map)
           this._currentScreen.render(this._display);
         } else if (inputData.keyCode == KEYS.VK_SHIFT){

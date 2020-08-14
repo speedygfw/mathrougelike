@@ -14,4 +14,4 @@ export const KEYPRESS = "keypress";
 
 //Game options
 export const HEIGHT = 40;
-export const WIDTH = 100;
+export const WIDTH = 90;

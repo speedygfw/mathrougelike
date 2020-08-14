@@ -1,3 +1,5 @@
+import Helpers from "./Helpers.js";
+
 class Creature
 {
 
@@ -50,8 +52,11 @@ class Creature
         {
             this._rip = true;
         }
-        console.log("player hits enemy: " + enemy.getAP() + " is death: " + this._rip);
+        Helpers.message(enemy.getName() + " hits "+ this.getName() +  " with " + enemy.getAP());
+        if (this._rip)
+            Helpers.message(enemy.getName() + " killed " + this.getName() + ".");
     }
+
 
     getX = () => this._x;
     getY = () => this._y;
