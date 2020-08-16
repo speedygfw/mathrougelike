@@ -1,21 +1,30 @@
 import Tile from "./Tile.js";
 import Glyph from "./Glyph.js";
 import { NULL_TILE, WIDTH, HEIGHT, WALL_TILE } from "../assets/types.js";
-import { Color, KEYS, Map, FOV } from "../lib/index.js";
+import { Color, KEYS, Map, FOV, Path } from "../lib/index.js";
 
 var instance = null;
 class GameMap {
   _tiles = null;
-  constructor(tiles, creatures, player) {
+  constructor(tiles, level, creatures, items, player) {
     this._tiles = tiles;
     this._creatures = creatures;
     this._width = tiles.length;
     this._height = tiles[0].length;
     this._player = player;
     this._useFOV = true;
-    this._level = 1;
+    this._level = level;
+    this._items = items;
+
     //this.lightPasses.bind({tiles: this._tiles})
     this._fov = new FOV.PreciseShadowcasting(this.lightPasses);
+    for (let n=0; n < this._creatures.length; n++)
+    {
+      let c = this._creatures[n];
+      c.setAStar(new Path.AStar(c.getX(), c.getY(), this.lightPasses));
+      
+    }
+
     instance = this;
   }
 
@@ -56,6 +65,16 @@ class GameMap {
     return null;
   };
 
+  getItem = (x, y) => {
+    for (let n=0; n < this._items.length; n++)
+    {
+      let c = this._items[n];
+      if (c.getX() == x && c.getY() == y)
+        return c;
+    }
+    return null;
+  };
+
   deleteCreature(c){
     for (let n=0; n<this._creatures.length; n++)
     {
@@ -85,15 +104,22 @@ class GameMap {
   renderMap = (display) => {
     var t = this.getTile;
     var ct = this.getCreature;
+    var ci = this.getItem;
+
     if (this._useFOV){
     this._fov.compute(this._player.getX(), this._player.getY(), 10, function(x, y, r, visibility) {
       var ch = (r ? "" : "@");
       
       let map_glyph = t(x,y).getGlyph();
       let c_tile = ct(x,y);
+      let i_tile = ci(x, y);
 
       //var color = (data[x+","+y] ? "#aa0": "#660");
       display.draw(x, y, map_glyph.getChar(), map_glyph.getForeground(), map_glyph.getBackground());
+      if (i_tile) {
+        let i_glyph = i_tile.getGlyph();
+        display.draw(x, y, i_glyph.getChar(), i_glyph.getForeground(), i_glyph.getBackground());
+      }
       if (c_tile) {
         //console.log(c_tile);
         let c_glyph = c_tile.getGlyph();

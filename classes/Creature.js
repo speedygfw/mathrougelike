@@ -81,6 +81,12 @@ class Creature
                 break;
         }
     }
+    setAStar(astar){
+        this._astar = astar;
+    }
+    playerUpdate(){
+        
+    }
 }
 
 export default Creature;

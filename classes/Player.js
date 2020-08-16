@@ -10,7 +10,13 @@ class Player {
         this._name = "Adventurer";
         this._rip = false;
         this._level = 1;
+        this._items = [];
+        
 
+    }
+    setPosition = (x, y) =>{
+        this._x = x;
+        this._y = y;
     }
     fight = (enemy, map) => {
         let one = Math.floor(Math.random() * (parseInt(map.getLevel()) * 10)) +1;

@@ -7,6 +7,7 @@ export const WALL_TILE = new Tile(new Glyph("#", "goldenrod"), false);
 export const PLAYER_TILE = new Tile(new Glyph("@"), null);
 export const OUT_TILE = new Tile(new Glyph(">"), true);
 export const IN_TILE = new Tile(new Glyph("<"), true);
+export const GOLD_TILE = new Tile(new Glyph("$", 'gold'), true);
 //Key Data
 export const KEYDOWN = "keydown";
 export const KEYUP = "keyup";

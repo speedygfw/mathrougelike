@@ -12,7 +12,8 @@ import {
   WALL_TILE,
   PLAYER_TILE,
   OUT_TILE,
-  IN_TILE
+  IN_TILE,
+  GOLD_TILE
 } from "../assets/types.js";
 // import Tile from "./Tile.js";
 // import Glyph from "./Glyph.js";
@@ -20,6 +21,7 @@ import GameMap from "./GameMap.js";
 import Tile from "./Tile.js";
 import Glyph from "./Glyph.js";
 import Creature from "./Creature.js";
+import Item from "./Item.js";
 
 /* GameScreen handles all Screen management for the Game object */
 class GameScreen extends Game {
@@ -28,6 +30,8 @@ class GameScreen extends Game {
    */
   constructor(options = { width: WIDTH, height: HEIGHT }) {
     super(options);
+    this._player = null;
+
   }
 
   /*
@@ -109,7 +113,10 @@ class GameScreen extends Game {
   {
     let coords = this.getRandomPlace(map);
     map[coords[0]][coords[1]] = IN_TILE;
-    this._player = new Player(PLAYER_TILE, coords[0], coords[1]);
+    if (this._player == null)
+      this._player = new Player(PLAYER_TILE, coords[0], coords[1]);
+    else
+      this._player.setPosition(coords[0], coords[1])
 
   };
 
@@ -162,12 +169,12 @@ class GameScreen extends Game {
       }
     }
   };
-  initLevel(){
-      let creatures = [];
-      let map = this.generateRandomDungeon();
-      
-      let level = 1;
-      for(let n=0; n < 10; n++)
+  switchMap(level){
+    let creatures = []
+    let items = []
+
+    let map = this.generateRandomDungeon();
+    for(let n=0; n < 10; n++)
       {
         let coords = this.getRandomPlace(map);
         let chars = ["p", "m", "M"];
@@ -192,7 +199,19 @@ class GameScreen extends Game {
         let c = new Creature(mname, level, g, coords[0], coords[1], map);
         creatures.push(c);
       }
-      this._map = new GameMap(map, creatures, this._player);
+      for (let i=0; i < 10; i++){
+        let coords = this.getRandomPlace(map);
+        let item = new Item(GOLD_TILE, coords[0], coords[1]);
+        items.push(item);
+      }
+      this._map = new GameMap(map, level, creatures, items,  this._player);
+  }
+  initLevel(){
+      this.switchMap(1);
+      
+      
+      
+      
   }
   /*
   * Play screen currently takes either Enter or Escape keyboard inputs,
@@ -218,7 +237,7 @@ class GameScreen extends Game {
       //this._map.renderCreatures(display);
       this._player.render(display);
       let el = "Name:" + this._player.getName() + " "
-      + "Level:" + this._player.getLevel()+ " "
+      + "Map:" + this._map.getLevel()+ " "
       + "HP:" + this._player.getHP()+ " "
       document.getElementById('hp').innerHTML= el;
       Helpers.drawMessages();
@@ -227,9 +246,7 @@ class GameScreen extends Game {
     },
     handleInput: (inputType, inputData) => {
       if (inputType === KEYDOWN) {
-        if (inputData.keyCode === KEYS.VK_RETURN) {
-          this.switchScreen(this.winScreen);
-        } else if (inputData.keyCode === KEYS.VK_ESCAPE) {
+        if (inputData.keyCode === KEYS.VK_ESCAPE) {
           this.switchScreen(this.loseScreen);
         } else if (inputData.keyCode == KEYS.VK_W){
           this._player.move(this._player.getX(), this._player.getY()-1, this._map)
@@ -243,8 +260,16 @@ class GameScreen extends Game {
         } else if (inputData.keyCode == KEYS.VK_D){
           this._player.move(this._player.getX()+1, this._player.getY(), this._map)
           this._currentScreen.render(this._display);
-        } else if (inputData.keyCode == KEYS.VK_SHIFT){
+        } else if (inputData.keyCode == KEYS.VK_RETURN){
+          let x = this._player.getX();
+          let y = this._player.getY();
+          let c = this._map.getTile(x, y);
           
+          if (c == OUT_TILE){
+            this.switchMap(this._map.getLevel()+1)
+            this._display.clear();
+            this._currentScreen.render(this._display);
+          }
         }
       }
     },
