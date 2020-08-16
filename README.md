@@ -4,6 +4,9 @@
 I had this fantastic idea to mix rougelike with simple math. each time you face an enemy it depends on your math
 knowledge how hard you hit the enemy.
 
+[Live demo](https://mathrougelike.fwall.de/)
+
+
 # started with jsrogue2
 
 A roguelike game developed in JavaScript, utilizing modern JS features. This project is a reimplementation/fork of the initial rot.js tutorial which is now outdated as of 2013. 
