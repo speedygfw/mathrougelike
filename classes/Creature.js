@@ -54,7 +54,11 @@ class Creature
         }
         Helpers.message(enemy.getName() + " hits "+ this.getName() +  " with " + enemy.getAP());
         if (this._rip)
+        {
             Helpers.message(enemy.getName() + " killed " + this.getName() + ".");
+            Helpers.addKilled(this);
+            Helpers.logKilled();
+        }
     }
 
 

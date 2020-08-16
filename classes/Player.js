@@ -104,7 +104,14 @@ class Player {
         {
             this._rip = true;
         }
-        Helpers.message("enemy hits player: " + player.getAP() + " is death: " + this._rip);
+        Helpers.message("enemy hits player: " + player.getAP());
+        if (this._rip){
+            Helpers.message(player.getName() + " is death. ");
+        }
+    }
+
+    pickUp = (item) => {
+        
     }
 
     getX = () => this._x;

@@ -2,6 +2,7 @@ import Tile from "./Tile.js";
 import Glyph from "./Glyph.js";
 import { NULL_TILE, WIDTH, HEIGHT, WALL_TILE } from "../assets/types.js";
 import { Color, KEYS, Map, FOV, Path } from "../lib/index.js";
+import Helpers from "./Helpers.js";
 
 var instance = null;
 class GameMap {
@@ -142,6 +143,7 @@ class GameMap {
       }
       this.renderCreatures(display);
   } 
+  
  // var data = {};
   //var display = display;
 /* new Map.Uniform(WIDTH, HEIGHT).create(function(x, y, type) {
@@ -156,6 +158,18 @@ class GameMap {
 }); */
 
   }
+  pickUp = () => {
+    for (let c=0; c < this._items.length; c++)
+    {
+      let i = this._items[c];
+      if (i.getX() == this._player.getX() && i.getY() == this._player.getY())
+      {
+        Helpers.message(this._player.getName() + " picked up ");
+        i.pickUp(this._player);
+      }
+    }
+  }
+
   renderCreatures = (display) => {
     console.log("creatures to render:" + this._creatures.length)
     let deaths = [];
@@ -175,6 +189,7 @@ class GameMap {
   }
   setFOV(fov) {this._fov = fov;}
   getFOV = () => this._fov;
+  getPlayer = () => this._player;
   setLevel(level) {this._level = level;}
   getLevel = () => this._level;
 }

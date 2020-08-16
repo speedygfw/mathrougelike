@@ -270,6 +270,12 @@ class GameScreen extends Game {
             this._display.clear();
             this._currentScreen.render(this._display);
           }
+        } else if (inputData.keyCode == KEYS.VK_ALT){
+            this._map.pickUp();
+        }
+
+        if (this._map.getPlayer().isDeath()){
+          this.switchScreen(this.loseScreen);
         }
       }
     },
@@ -310,8 +316,7 @@ class GameScreen extends Game {
       console.log("Exited lose screen");
     },
     render: display => {
-      for (let i = 0; i < 22; i++)
-        display.drawText(2, i + 1, "%b{red}You lose! :(");
+        display.drawText(2, 1, "%b{red}You lose! :(");
     },
     handleInput: (inputType, inputData) => {}
   };
