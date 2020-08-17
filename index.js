@@ -1,11 +1,12 @@
 var app = require('express')();
-import { static } from 'express';
+var express = require('express');
+
 
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
 //app.use(app.static('public'));
-app.use(static('public'));
+app.use(express.static('public'));
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
   });
