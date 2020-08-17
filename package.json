@@ -1,6 +1,10 @@
 {
   "name": "mathrougelike",
   "version": "0.0.1",
+  "author": "Frank Wallenborn <fwallenborn@gmx.de>",
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+  },
   "description": "math rougelike",
   "dependencies": {
     "express": "^4.15.2",
