@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "Frank Wallenborn <fwallenborn@gmx.de>",
   "scripts": {
-    "start": "NODE_ENV=production node index.js",
+    "start": "NODE_ENV=production node index.js"
   },
   "description": "math rougelike",
   "dependencies": {
