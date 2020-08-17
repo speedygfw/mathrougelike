@@ -21,7 +21,7 @@ http.listen(process.env.PORT | 80, () => {
 io.on('connection', (socket) => {
     ++numUsers;
     console.log("user connected...");
-    socket.broadcast.emit('users', numUsers);
+    //socket.broadcast.emit('users', numUsers);
 
 
     socket.on('chat message', (msg) => {
@@ -31,6 +31,6 @@ io.on('connection', (socket) => {
   });
 
   io.on('disconnect', () => {
-  --numUsers;
+     --numUsers;
     console.log("user leaves...");
   });
