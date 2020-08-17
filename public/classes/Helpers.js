@@ -4,6 +4,8 @@ class Helpers {
 
     static message(msg) {
         Helpers._messages.push(msg);
+        //var socket = io();
+        //io.emit("msg:" + this.message)
 
     }
 
