@@ -39,6 +39,10 @@
                 
                 <div class="textarea" id="messages"></div>
                 <div class="numUsers" id="numUsers">Users: 1</div>
+                <div class="textarea" id="chat"></div>
+                <form action="">
+                  <input id="m" autocomplete="off" /><button>Send</button>
+                </form>
                 </div>
            
         </div>
@@ -106,13 +110,24 @@
     
         $(function () {
     var socket = io();
-   
+    $('form').submit(function(e){
+      e.preventDefault(); // prevents page reloading
+      socket.emit('chat message', $('#m').val());
+      $('#m').val('');
+      return false;
+    });
     
     socket.on('numUsers', function(numUsers){
         console.log("numUsers:" + numUsers)
         let el = document.getElementById("numUsers");
         el.innerHTML="<b>Users: <b>" + numUsers;
 
+    });
+
+    socket.on('chat message', function(msg){
+      let el = document.getElementById("chat");
+      $(el).append('->' + msg + '<br>');
+      console.log("message reveived:" + msg);
     });
   });
    
