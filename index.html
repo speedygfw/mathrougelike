@@ -38,6 +38,7 @@
                 
                 
                 <div class="textarea" id="messages"></div>
+                <div class="numUsers" id="numUsers">Users: 1</div>
                 </div>
            
         </div>
@@ -102,13 +103,15 @@
         </script>
      
           <script>
-        var socket = io();
+    
         $(function () {
     var socket = io();
    
     
-    socket.on('new connection', function(msg){
-        console.log("new player entered.")
+    socket.on('numUsers', function(numUsers){
+        console.log("numUsers:" + numUsers)
+        let el = document.getElementById("numUsers");
+        el.innerHTML="<b>Users: <b>" + numUsers;
 
     });
   });
