@@ -5,6 +5,10 @@
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
        <style>
+         body{
+           color: white;
+           background: black;
+         }
          .textarea {
     -moz-appearance: textfield-multiline;
     -webkit-appearance: textarea;
@@ -33,18 +37,25 @@
             <div class="col-lg-12" id="hp"></div>
             <div class="col-lg-9" id="game"></div>
             <div class="col-lg-3" id="desc">
-              
+              <form id="loginForm" action="">
+                Nickname<br>
+                <input id="nickname" type="text" /><button>Connect</button>
+
+              </form>
+
+              <div id="chatArea">
                 <h3>Messages</h3>
                 
                 
                 <div class="textarea" id="messages"></div>
                 <div class="numUsers" id="numUsers">Users: 1</div>
                 <div class="textarea" id="chat"></div>
-                <form action="">
+                
+                <form id="chatForm" action="">
                   <input id="m" autocomplete="off" /><button>Send</button>
                 </form>
                 </div>
-           
+           </div>
         </div>
         <div class="row">
             <div class="col-lg-6">
@@ -110,24 +121,51 @@
     
         $(function () {
     var socket = io();
-    $('form').submit(function(e){
+    $('#chatArea').hide();
+    
+    $('#chatForm').submit(function(e){
       e.preventDefault(); // prevents page reloading
-      socket.emit('chat message', $('#m').val());
+      let message=$('#m').val();
+      if (message.length < 2)
+        return false;
+      
+      let o = {"nickname": $('#nickname').val(), "msg": message}
+      socket.emit('chat message', o);
       $('#m').val('');
       return false;
     });
-    
-    socket.on('numUsers', function(numUsers){
-        console.log("numUsers:" + numUsers)
-        let el = document.getElementById("numUsers");
-        el.innerHTML="<b>Users: <b>" + numUsers;
+    $('#loginForm').submit(function(e){
+      e.preventDefault(); // prevents page reloading
+      let nickname=$('#nickname').val();
+      if (nickname.length < 2)
+      {
+        alert("nickname length should be >= 2.");
+        return false;
+      }
+      socket.emit('login', nickname);
+      $('#m').val('');
+      return false;
+    });
+
+    socket.on('loginAccepted', function(id){
+      document.socketId = id;
+      $('#chatArea').show();
+      $('#loginForm').hide();
 
     });
 
-    socket.on('chat message', function(msg){
+    socket.on('users', function(users){
+        console.log("numUsers:" + users.length)
+        let el = document.getElementById("numUsers");
+        el.innerHTML="<b>Users: <b>" + users.length;
+        document.users = users;
+    });
+
+    socket.on('chat message', function(r){
       let el = document.getElementById("chat");
-      $(el).append('->' + msg + '<br>');
-      console.log("message reveived:" + msg);
+      console.log(r);
+      $(el).append(r.nickname + '->' + r.msg + '<br>');
+      
     });
   });
    

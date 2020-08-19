@@ -1,5 +1,6 @@
 var app = require('express')();
 var express = require('express');
+const { disconnect } = require('process');
 
 
 
@@ -18,22 +19,49 @@ http.listen(process.env.PORT || 80, () => {
 });
 
 var numUsers = 0;
+var users = [];
+var messages = [];
 
+disconnectUser = function(id){
 
+  for(let n=0; n<users.length; n++)
+    if(users[n].id == id)
+    {
+      users.splice(n, 1);
+        return;
+    }
+
+}
 io.on('connection', (socket) => {
   console.log(`Socket ${socket.id} connected.`);
-    ++numUsers;
-    socket.broadcast.emit('numUsers', numUsers);
+    socket.broadcast.emit('users', users);
+    //io.emit('users', users);
+    
 
-    socket.on('chat message', (msg) => {
-      console.log(msg);
-      io.emit('chat message', msg);
+    socket.on('chat message', (r) => {
+
+      console.log(r.nickname + " sends " + r.msg);
+      console.log(r);
+      let o = {'nickname': r.nickname, 'msg': r.msg}
+      messages.push(o);
+      io.emit('chat message', o);
+    });
+    socket.on('login', (nickname) => {
+      console.log(nickname + ' logged in.');
+      io.emit('loginAccepted', socket.id);
+      let o = {'id': socket.id, 'nickname': nickname};
+      users.push(o);
+      io.emit('users', users);
+      console.log(users);
     });
 
     socket.on('disconnect', () => {
-      --numUsers;
-      socket.broadcast.emit('numUsers', numUsers);
+      disconnectUser(socket.id);
+
+
+      socket.broadcast.emit('users', users);
       console.log(`Socket ${socket.id} disconnected.`);
+      console.log(users);
     });
 
   });
