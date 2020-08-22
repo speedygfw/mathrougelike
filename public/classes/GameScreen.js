@@ -207,6 +207,7 @@ class GameScreen extends Game {
       this._map = new GameMap(map, level, creatures, items,  this._player);
       document.mrl.player = this._player || null;
       document.mrl.map = this._map;
+      Helpers.serverMessage(this._player.getName() + " entered map at level " + level);
   }
   initLevel(){
       this.switchMap(1);
@@ -221,7 +222,7 @@ class GameScreen extends Game {
     + "HP:" + this._player.getHP()+ " "
     document.getElementById('hp').innerHTML= el;
   }
-  
+
   /*
   * Play screen currently takes either Enter or Escape keyboard inputs,
   and switches screen accordingly. 

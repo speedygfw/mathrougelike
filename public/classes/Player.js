@@ -42,7 +42,9 @@ class Player {
         }
         
             if (is_right){
-                Helpers.message("right answer: " + one + enemy.getArithmeticSymbol() + two +"=" + answer);
+                let msg = "right answer: " + one + enemy.getArithmeticSymbol() + two +"=" + answer
+                Helpers.message(msg);
+                Helpers.serverMessage(msg);
                 enemy.hit(this);
                 if (enemy.isDeath()){
                     map.deleteCreature(enemy);
@@ -50,11 +52,14 @@ class Player {
 
                 return true;
             } else {
-                Helpers.message("wrong answer: " + one + enemy.getArithmeticSymbol() + two +"=" + answer);
-                Helpers.message("right answer is: " + answer_right)
+                let msg = "wrong answer: " + one + enemy.getArithmeticSymbol() + two +"=" + answer;
+                Helpers.message(msg);
+                Helpers.serverMessage(msg);
+                Helpers.message("right answer is: " + answer_right);
+                Helpers.serverMessage("right answer is: " + answer_right);
                 this.hit(enemy);
                 if (this.isDeath()){
-
+                    Helpers.serverMessage(this.getName() + " died.");
                 }
                 return false;
             }
@@ -68,7 +73,7 @@ class Player {
         }
         if (map.enemyHit(x, y) != null)
         {
-            console.log("fight agains enemy...");
+            Helpers.serverMessage(this.getName() + " fight against enemy...");
             let enemy = map.enemyHit(x,y);
             let result = this.fight(enemy, map);
             if (result == false){
@@ -104,7 +109,10 @@ class Player {
         {
             this._rip = true;
         }
-        Helpers.message("enemy hits player: " + player.getAP());
+        let msg = player.getName() + " hits " + this.getName() + " with " + player.getAP();
+        Helpers.message(msg);
+        Helpers.serverMessage(msg);
+
         if (this._rip){
             Helpers.message(player.getName() + " is death. ");
         }

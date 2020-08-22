@@ -52,10 +52,16 @@ class Creature
         {
             this._rip = true;
         }
-        Helpers.message(enemy.getName() + " hits "+ this.getName() +  " with " + enemy.getAP());
+        let msg = enemy.getName() + " hits "+ this.getName() +  " with " + enemy.getAP();
+        
+        Helpers.message(msg);
+        Helpers.serverMessage(msg);
+
         if (this._rip)
         {
-            Helpers.message(enemy.getName() + " killed " + this.getName() + ".");
+            let m = enemy.getName() + " killed " + this.getName() + ".";
+            Helpers.message(m);
+            Helpers.serverMessage(m);
             Helpers.addKilled(this);
             Helpers.logKilled();
         }

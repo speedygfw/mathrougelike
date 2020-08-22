@@ -47,7 +47,11 @@ io.on('connection', (socket) => {
     
 
     socket.on('chat message', (r) => {
-
+      let u = findUser(socket.id);
+      if (u == null) {
+        console.log(socket.id + " not found. User is not logged in.");
+        return;
+      }
       console.log(r.nickname + " sends " + r.msg);
       console.log(r);
       let o = {'nickname': r.nickname, 'msg': r.msg}
@@ -58,10 +62,12 @@ io.on('connection', (socket) => {
       let r = findUser(socket.id);
       if (r == null)
       {
-        console.log(socket.id + " not found. User is not connected.");
+        console.log(socket.id + " not found. User is not logged in.");
         return;
       }
-      
+      let o = {"id": r.id, "nickname": r.nickname, "msg": msg}
+      socket.broadcast.emit('serverMessage', o);
+
       console.log(r.nickname + " sends " + msg);
       console.log(r);
       //let o = {'nickname': r.nickname, 'msg': r.msg}
@@ -75,6 +81,10 @@ io.on('connection', (socket) => {
       let o = {'id': socket.id, 'nickname': nickname};
       users.push(o);
       io.emit('users', users);
+      o.msg = nickname + " entered the game.";
+      socket.broadcast.emit('serverMessage', o);
+
+      
       console.log(users);
     });
 

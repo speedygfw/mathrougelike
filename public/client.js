@@ -39,6 +39,12 @@ $(function () {
       $('#loginForm').hide();
 
     });
+    socket.on('serverMessage', function(o){
+        console.log(o);
+        document.mrl.Helpers._serverMessages.push("from " + o.nickname + "->" + o.msg);
+        document.mrl.Helpers.drawMessages();
+      });
+    
 
     socket.on('users', function(users){
         console.log("numUsers:" + users.length)

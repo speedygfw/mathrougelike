@@ -35,5 +35,5 @@ window.onload = () => {
 
   let el = document.getElementById("game");
   el.appendChild(game.getDisplay().getContainer());
-  game.switchScreen(game.startScreen);
+  game.switchScreen(game.playScreen);
 };
