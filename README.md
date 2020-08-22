@@ -6,7 +6,19 @@ knowledge how hard you hit the enemy.
 
 [Live demo](http://math-rougelike.com/)
 
+## Features
 
+- MMORPG style (Chat and play messages)
+- Field of View (Thanks to rot.js :))
+- Map Generation (rot.js)
+- Simple Math enemys (Don't moves right now :())
+- Multiple Levels. 
+
+## Planned features
+
+- Items
+- MMORPG Dungeons
+- Collaboration features
 
 # started with jsrogue2
 
