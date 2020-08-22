@@ -205,6 +205,8 @@ class GameScreen extends Game {
         items.push(item);
       }
       this._map = new GameMap(map, level, creatures, items,  this._player);
+      document.mrl.player = this._player || null;
+      document.mrl.map = this._map;
   }
   initLevel(){
       this.switchMap(1);
@@ -213,6 +215,13 @@ class GameScreen extends Game {
       
       
   }
+  renderStats(){
+    let el = "Name:" + this._player.getName() + " "
+    + "Map:" + this._map.getLevel()+ " "
+    + "HP:" + this._player.getHP()+ " "
+    document.getElementById('hp').innerHTML= el;
+  }
+  
   /*
   * Play screen currently takes either Enter or Escape keyboard inputs,
   and switches screen accordingly. 
@@ -231,15 +240,13 @@ class GameScreen extends Game {
     exit: () => {
       console.log("Exited play screen");
     },
+    
     render: display => {
 
       this._map.renderMap(display);
       //this._map.renderCreatures(display);
       this._player.render(display);
-      let el = "Name:" + this._player.getName() + " "
-      + "Map:" + this._map.getLevel()+ " "
-      + "HP:" + this._player.getHP()+ " "
-      document.getElementById('hp').innerHTML= el;
+      this.renderStats();
       Helpers.drawMessages();
 
       

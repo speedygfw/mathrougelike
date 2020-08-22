@@ -22,6 +22,14 @@ var numUsers = 0;
 var users = [];
 var messages = [];
 
+findUser = function(id){
+  for(let n=0; n<users.length; n++)
+    if(users[n].id == id)
+      return users[n];
+  
+  return null;
+}
+
 disconnectUser = function(id){
 
   for(let n=0; n<users.length; n++)
@@ -46,6 +54,21 @@ io.on('connection', (socket) => {
       messages.push(o);
       io.emit('chat message', o);
     });
+    socket.on('message', (msg) => {
+      let r = findUser(socket.id);
+      if (r == null)
+      {
+        console.log(socket.id + " not found. User is not connected.");
+        return;
+      }
+      
+      console.log(r.nickname + " sends " + msg);
+      console.log(r);
+      //let o = {'nickname': r.nickname, 'msg': r.msg}
+      //messages.push(o);
+      //io.emit('chat message', o);
+    });
+
     socket.on('login', (nickname) => {
       console.log(nickname + ' logged in.');
       io.emit('loginAccepted', socket.id);
@@ -54,6 +77,8 @@ io.on('connection', (socket) => {
       io.emit('users', users);
       console.log(users);
     });
+
+
 
     socket.on('disconnect', () => {
       disconnectUser(socket.id);

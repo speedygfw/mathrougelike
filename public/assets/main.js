@@ -1,5 +1,7 @@
 import GameScreen from "../classes/GameScreen.js";
 import { HEIGHT, WIDTH } from "./types.js";
+import Helpers from "../classes/Helpers.js";
+
 //  Options passed when we initialize our display object
 //var tileSet = document.createElement("img");
 //tileSet.src = "tiles.gif";
@@ -25,7 +27,12 @@ let options = {
 // Wait for window to load before rendering
 window.onload = () => {
   //initialize a gamescreen and append it to the DOM.
+  document.mrl = {}
+
   let game = new GameScreen(options);
+  document.mrl.gameScreen = game;
+  document.mrl.Helpers = Helpers;
+
   let el = document.getElementById("game");
   el.appendChild(game.getDisplay().getContainer());
   game.switchScreen(game.startScreen);

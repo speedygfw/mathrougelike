@@ -4,7 +4,10 @@ class Helpers {
 
     static message(msg) {
         Helpers._messages.push(msg);
-
+        //document.mrl.clientMessages = Helpers._messages;
+      if (typeof document.io !== 'undefined'){
+        document.io.emit('message', msg);
+      }
     }
 
     static drawMessages()

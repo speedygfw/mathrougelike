@@ -113,7 +113,7 @@ class Player {
     pickUp = (item) => {
         
     }
-
+    setName = (name) => this._name = name;
     getX = () => this._x;
     getY = () => this._y;
     getName = () => this._name;
@@ -121,6 +121,7 @@ class Player {
     getAP = () => this._ap;
     isDeath = () => this._rip;
     getLevel = () => this._level;
+
 }
 
 export default Player;
