@@ -4,7 +4,7 @@
 I had this fantastic idea to mix rougelike with simple math. each time you face an enemy it depends on your math
 knowledge how hard you hit the enemy.
 
-[Live demo](http://math-rougelike.com/)
+[Live demo](http://mathrougelike.fwalle.de/)
 
 ## Features
 
